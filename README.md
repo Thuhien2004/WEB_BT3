@@ -144,4 +144,33 @@ B2: Kết nối nodered với MariaDB để lưu dữ liệu cảm biến
   
 <img width="955" height="282" alt="image" src="https://github.com/user-attachments/assets/c77f6953-ea2f-4297-bc87-a621b502bd95" />
 
+- Tiếp tục tạo thêm các bảng trong iotdb
+
+<img width="1292" height="206" alt="image" src="https://github.com/user-attachments/assets/ff3fb488-7d68-4ab7-a059-df5a8fd667c2" />
+
+- Tạo flow chính: Nodes: http in (POST /sensor), json, function (build influx payload + sql), influxdb out, mysql (execute msg.topic)
+
+<img width="673" height="658" alt="image" src="https://github.com/user-attachments/assets/e32cee6e-839f-4186-b1de-91d3fd238482" />
+<img width="813" height="860" alt="image" src="https://github.com/user-attachments/assets/86ede8ab-2d1b-476f-befb-f88b0df75346" />
+<img width="671" height="902" alt="image" src="https://github.com/user-attachments/assets/4ffcf5b5-f90c-40b6-9644-9898acc1a569" />
+<img width="663" height="919" alt="image" src="https://github.com/user-attachments/assets/c36b5818-28a4-4ddb-845c-c27aa1c2c18b" />
++ Cấu hình InfluxDB trong Docker:
+<img width="1919" height="481" alt="image" src="https://github.com/user-attachments/assets/c0403b56-ff35-4c9b-8b44-e548ed82f22d" />
+
+- Tạo Flow: Login API (/api/login): Nodes: http in POST /api/login → json → mysql SELECT → function compare → mysql insert session → function set cookie → http response.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
