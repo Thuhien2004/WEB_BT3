@@ -158,12 +158,23 @@ B2: Kết nối nodered với MariaDB để lưu dữ liệu cảm biến
 <img width="1919" height="481" alt="image" src="https://github.com/user-attachments/assets/c0403b56-ff35-4c9b-8b44-e548ed82f22d" />
 
 - Tạo Flow: Login API (/api/login): Nodes: http in POST /api/login → json → mysql SELECT → function compare → mysql insert session → function set cookie → http response.
+  
+<img width="1080" height="239" alt="image" src="https://github.com/user-attachments/assets/b3686fa2-79ba-43dd-bceb-e71a2a3c52be" />
 
++ Cấu hình từng node của flow
+<img width="660" height="490" alt="image" src="https://github.com/user-attachments/assets/0a9dec58-94fa-4002-9267-7fa88bba2dad" />
+<img width="826" height="692" alt="image" src="https://github.com/user-attachments/assets/b0628b9a-905a-4e2c-b30a-7cce7c0ba5b8" />
+<img width="652" height="719" alt="image" src="https://github.com/user-attachments/assets/b54275ac-56a0-4a09-8e12-c60a3231c772" />
+<img width="670" height="494" alt="image" src="https://github.com/user-attachments/assets/acd6cf5a-ecbd-4756-af75-9086f17a3677" />
 
+- Tạo Flow 3 — /api/data (GET dữ liệu cảm biến) ,Frontend gọi API này để hiển thị bảng giá trị mới nhất.
+<img width="636" height="431" alt="image" src="https://github.com/user-attachments/assets/fdc209af-139a-4372-8e76-796518d89702" />
+<img width="826" height="547" alt="image" src="https://github.com/user-attachments/assets/91bae170-5db9-4ad4-a548-4dd23a79cff2" />
+<img width="652" height="799" alt="image" src="https://github.com/user-attachments/assets/59819aa1-941a-49d3-bc23-ee1b93dff12d" />
+ 
+ - Tạo flow 4( /api/logout)
 
-
-
-
+<img width="941" height="146" alt="image" src="https://github.com/user-attachments/assets/905a9a3a-26ff-4b80-bcbb-2f7c1c754806" />
 
 
 
