@@ -176,9 +176,20 @@ B2: Kết nối nodered với MariaDB để lưu dữ liệu cảm biến
 
 <img width="941" height="146" alt="image" src="https://github.com/user-attachments/assets/905a9a3a-26ff-4b80-bcbb-2f7c1c754806" />
 
+# :))))) Em xin lỗi thầy rất nhiều nhưng em mãi không chữa được lỗi 
 
+5. Nginx làm web-server
+ - Cấu hình nginx để chạy được website qua url http://fullname.com  (thay fullname bằng chuỗi ko dấu viết liền tên của bạn)
+ - Cấu hình nginx để http://fullname.com/nodered truy cập vào nodered qua cổng 80, (dù nodered đang chạy ở port 1880)
+ - Cấu hình nginx để http://fullname.com/grafana truy cập vào grafana qua cổng 80, (dù grafana đang chạy ở port 3000)
+-----> 
+<img width="810" height="437" alt="image" src="https://github.com/user-attachments/assets/d282d208-1f75-4a6b-ab35-7c84db61f394" />
+Truy cập được bằng domain nguyenthithuhien.com
+<img width="1429" height="593" alt="image" src="https://github.com/user-attachments/assets/f7ed6eac-d575-4afa-a7cd-84616a675664" />
+- Thiết kế giao diện web tại file index.html trong thư mục www
+<img width="1855" height="1029" alt="image" src="https://github.com/user-attachments/assets/faeed963-72d8-491c-892b-19d080834966" />
 
-
+# em làm đến đây là không đăng nhập được vì em mắc ở nodered, em xin lỗi thầy , em đã cố hết sức :(((
 
 
 
