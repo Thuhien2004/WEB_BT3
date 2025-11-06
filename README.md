@@ -50,12 +50,20 @@ Truy cập được các trình duyệt nodered và grafana (đăng nhập grafa
 
 <img width="1904" height="1029" alt="image" src="https://github.com/user-attachments/assets/16ea1cf1-d52e-4bb0-8e1a-d7e8b736cbaf" />
 
+2. Vào nodered
+- cài đặt node-red-contrib-influxdb bằng cách vào Manager Pallet trong nodered ở thanh menu , ài node kết nối InfluxDB
 
+<img width="999" height="538" alt="image" src="https://github.com/user-attachments/assets/206af169-b012-4d7c-9eb7-64fce77940fa" />
 
+- Tạo flow mô phỏng cảm biến
 
+<img width="925" height="257" alt="image" src="https://github.com/user-attachments/assets/54b6dd48-e3ee-4d07-834a-8a9b3e7be990" />
 
+- Thêm dữ liệu cho fuction
 
+<img width="810" height="586" alt="image" src="https://github.com/user-attachments/assets/d2c1166d-20cc-4cb3-b54f-96b031bc26a4" />
 
+- Cấu hình node InfluxDB Out:
 
 
 
