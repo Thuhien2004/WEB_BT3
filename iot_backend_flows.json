@@ -1,0 +1,233 @@
+[
+  {
+    "id": "flow1_sensor_ingest",
+    "label": "Flow 1 - Sensor Ingest",
+    "nodes": [
+      {
+        "id": "inject_sensor",
+        "type": "inject",
+        "z": "flow1_sensor_ingest",
+        "name": "Simulate sensor data",
+        "props": [{"p":"payload"}],
+        "repeat": "5",
+        "payloadType": "date",
+        "x": 180,
+        "y": 120,
+        "wires": [["function_sensor"]]
+      },
+      {
+        "id": "function_sensor",
+        "type": "function",
+        "z": "flow1_sensor_ingest",
+        "name": "Generate sensor data",
+        "func": "let temperature = (20 + Math.random()*10).toFixed(2);\nlet humidity = (50 + Math.random()*20).toFixed(2);\nmsg.payload = {\n   temperature: parseFloat(temperature),\n   humidity: parseFloat(humidity),\n   time: new Date().toISOString()\n};\nreturn msg;",
+        "x": 410,
+        "y": 120,
+        "wires": [["mysql_latest","influxdb_out"]]
+      },
+      {
+        "id": "mysql_latest",
+        "type": "MSSQL",
+        "z": "flow1_sensor_ingest",
+        "mssqlCN": "mariadb_conn",
+        "name": "Update MariaDB (latest)",
+        "query": "UPDATE sensor_latest SET temperature={{payload.temperature}}, humidity={{payload.humidity}}, updated_at=NOW() WHERE id=1;",
+        "x": 710,
+        "y": 80,
+        "wires": []
+      },
+      {
+        "id": "influxdb_out",
+        "type": "influxdb out",
+        "z": "flow1_sensor_ingest",
+        "influxdb": "influxdb_conn",
+        "name": "Write to InfluxDB",
+        "measurement": "sensors",
+        "x": 720,
+        "y": 160,
+        "wires": []
+      }
+    ]
+  },
+  {
+    "id": "flow2_login_api",
+    "label": "Flow 2 - Login API",
+    "nodes": [
+      {
+        "id": "login_in",
+        "type": "http in",
+        "z": "flow2_login_api",
+        "name": "Login API",
+        "url": "/api/login",
+        "method": "post",
+        "x": 150,
+        "y": 100,
+        "wires": [["login_func"]]
+      },
+      {
+        "id": "login_func",
+        "type": "function",
+        "z": "flow2_login_api",
+        "name": "Verify user",
+        "func": "const crypto = global.get('crypto');\nconst body = msg.payload;\nconst username = body.username;\nconst password = body.password;\nconst hash = crypto.createHash('sha256').update(password).digest('hex');\nmsg.topic = `SELECT * FROM users WHERE username='${username}' AND password_hash='${hash}' LIMIT 1`;\nreturn msg;",
+        "x": 360,
+        "y": 100,
+        "wires": [["mysql_login"]]
+      },
+      {
+        "id": "mysql_login",
+        "type": "MSSQL",
+        "z": "flow2_login_api",
+        "mssqlCN": "mariadb_conn",
+        "name": "Check user in MariaDB",
+        "queryType": "msg.topic",
+        "x": 600,
+        "y": 100,
+        "wires": [["login_response_func"]]
+      },
+      {
+        "id": "login_response_func",
+        "type": "function",
+        "z": "flow2_login_api",
+        "name": "Return token",
+        "func": "if (msg.payload.length > 0) {\n  const token = Math.random().toString(36).substring(2);\n  msg.payload = { success: true, token };\n} else {\n  msg.payload = { success: false, message: 'Invalid credentials' };\n}\nreturn msg;",
+        "x": 840,
+        "y": 100,
+        "wires": [["login_out"]]
+      },
+      {
+        "id": "login_out",
+        "type": "http response",
+        "z": "flow2_login_api",
+        "name": "Send response",
+        "statusCode": "",
+        "x": 1050,
+        "y": 100,
+        "wires": []
+      }
+    ]
+  },
+  {
+    "id": "flow3_latest_api",
+    "label": "Flow 3 - Get Latest Sensor Data",
+    "nodes": [
+      {
+        "id": "latest_in",
+        "type": "http in",
+        "z": "flow3_latest_api",
+        "name": "Get Latest API",
+        "url": "/api/latest",
+        "method": "get",
+        "x": 150,
+        "y": 100,
+        "wires": [["mysql_latest_select"]]
+      },
+      {
+        "id": "mysql_latest_select",
+        "type": "MSSQL",
+        "z": "flow3_latest_api",
+        "mssqlCN": "mariadb_conn",
+        "name": "Select latest from MariaDB",
+        "query": "SELECT * FROM sensor_latest LIMIT 1;",
+        "x": 420,
+        "y": 100,
+        "wires": [["latest_out_func"]]
+      },
+      {
+        "id": "latest_out_func",
+        "type": "function",
+        "z": "flow3_latest_api",
+        "name": "Format JSON",
+        "func": "msg.payload = msg.payload[0] || {};\nreturn msg;",
+        "x": 660,
+        "y": 100,
+        "wires": [["latest_out"]]
+      },
+      {
+        "id": "latest_out",
+        "type": "http response",
+        "z": "flow3_latest_api",
+        "name": "Send latest data",
+        "x": 870,
+        "y": 100,
+        "wires": []
+      }
+    ]
+  },
+  {
+    "id": "flow4_logout_api",
+    "label": "Flow 4 - Logout API",
+    "nodes": [
+      {
+        "id": "logout_in",
+        "type": "http in",
+        "z": "flow4_logout_api",
+        "name": "Logout API",
+        "url": "/api/logout",
+        "method": "post",
+        "x": 150,
+        "y": 100,
+        "wires": [["logout_func"]]
+      },
+      {
+        "id": "logout_func",
+        "type": "function",
+        "z": "flow4_logout_api",
+        "name": "Delete session",
+        "func": "msg.topic = `DELETE FROM sessions WHERE token='${msg.payload.token}'`;\nreturn msg;",
+        "x": 360,
+        "y": 100,
+        "wires": [["mysql_logout"]]
+      },
+      {
+        "id": "mysql_logout",
+        "type": "MSSQL",
+        "z": "flow4_logout_api",
+        "mssqlCN": "mariadb_conn",
+        "name": "Delete token in MariaDB",
+        "queryType": "msg.topic",
+        "x": 590,
+        "y": 100,
+        "wires": [["logout_out_func"]]
+      },
+      {
+        "id": "logout_out_func",
+        "type": "function",
+        "z": "flow4_logout_api",
+        "name": "Return logout result",
+        "func": "msg.payload = { success: true, message: 'Logged out' };\nreturn msg;",
+        "x": 820,
+        "y": 100,
+        "wires": [["logout_out"]]
+      },
+      {
+        "id": "logout_out",
+        "type": "http response",
+        "z": "flow4_logout_api",
+        "name": "Send response",
+        "x": 1050,
+        "y": 100,
+        "wires": []
+      }
+    ]
+  },
+  {
+    "id": "mariadb_conn",
+    "type": "MSSQL-CN",
+    "name": "mariadb",
+    "server": "mariadb",
+    "port": "3306",
+    "db": "iotdb",
+    "user": "root",
+    "pass": "123456"
+  },
+  {
+    "id": "influxdb_conn",
+    "type": "influxdb",
+    "hostname": "influxdb",
+    "port": "8086",
+    "database": "iotdb",
+    "name": "influxdb",
+    "protocol": "http"
+  }
+]
